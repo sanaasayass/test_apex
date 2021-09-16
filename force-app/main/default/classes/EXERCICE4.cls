@@ -8,7 +8,7 @@
         private static final String PUB = RS_GloablsC.ComplianceProcess_PUB;
         private static final set<String> setComplianceProcess = new set<String>{IMMO_NEUF, PUB};
         
-        
+        // pas de modification pour le scope
         global Database.QueryLocator start(Database.BatchableContext cnxs) { 
             String  subscription = 'SELECT Id, CompanyAddressCity__c, OrderNumber__c, CompanyAddressCountry__c, CompanyPhone__c, ContactGender__c, ContactLastName__c,';
             subscription += 'ContactFirstName__c, Companyindustry__c, CompanyName__c, PrintVolume__c, BroadcastSoftware__c, PromoterDescription__c, SBQQ__RequiredById__c,';
@@ -42,7 +42,7 @@
     
         }
         
-    
+    // mettre en place le switch  pour gérer tout les cas de processus de conformité 
         private SBQQ__Subscription__c setConformiteImmoNeufEtPub(SBQQ__Subscription__c subscription) {
             Boolean estConforme = 'Non';
             subscription.MissingInformations__c = '';

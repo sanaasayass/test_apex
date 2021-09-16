@@ -19,6 +19,8 @@ private class SubscriptionComplianceCheckTest {
     private static final String UBIFLOW = 'Ubiflow';
     private static final String ELEMENTS_MANQUANTS = 'Éléments manquants';
     
+
+    //pour créer des enregistrements de test une fois,
     @testSetup 
     static void setup() {
         Account compte = Account_DataFactory.createAccount('compte_1', '+33 6 00 00 00 00', '37915832200097');
