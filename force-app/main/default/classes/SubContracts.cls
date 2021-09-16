@@ -1,0 +1,51 @@
+public with sharing class SubContracts {
+   
+    public static void updateContratEndDate (List<SBQQ__Subscription__c> Newsubs)  { 
+        Boolean isTerminate;
+        Date terminatedDate;
+        Date endDate;
+	    List<SBQQ__Subscription__c> Newsubs = Newsubs;
+        Set<Id> cons = new Set<Id>();
+         for (SBQQ__Subscription__c sub :Newsubs) {
+            if(sub.SBQQ__Contract__c != null) cons.add(sub.SBQQ__Contract__c);
+        }
+
+        try {
+            List<Contract> conts = new List<Contract>();
+            for (Contract con : [SELECT Id, EndDate, (SELECT Id, SBQQ__EndDate__c, SBQQ__TerminatedDate__c, SBQQ__Contract__c 
+                                                  FROM SBQQ__Subscriptions__r) FROM Contract WHERE Id IN :cons]) {
+                                                      system.debug('##contrat on :: '+con)   ; 
+                isTerminate = true;
+                terminatedDate = con.EndDate;
+                endDate = con.EndDate;
+                Date endDateF = con.EndDate;
+                  
+                for (SBQQ__Subscription__c sub : con.SBQQ__Subscriptions__r) {
+                    if (sub.SBQQ__TerminatedDate__c == null) {
+                        isTerminate = false;
+                    } else if (terminatedDate < sub.SBQQ__TerminatedDate__c) {
+                        terminatedDate = sub.SBQQ__TerminatedDate__c;
+                    }
+                    if (sub.SBQQ__EndDate__c != null && endDate < sub.SBQQ__EndDate__c) {
+                        endDate = sub.SBQQ__EndDate__c;
+                    }
+                }
+                
+                
+                if (isTerminate) {
+                    con.EndDate = terminatedDate;
+                } else {
+                    con.EndDate = endDate;
+                }
+                if(endDateF != con.EndDate) conts.add(con);
+                        
+                
+                }
+            
+                UPDATE conts;
+
+        } catch(Exception e) {
+         Logs.error('ContractEndDateAdapterTrigger','SBQQ__Subscription__c Trigger insert & update', e);
+        }
+    }
+}
